@@ -34,8 +34,13 @@
 #include <ESP8266mDNS.h>
 #include <OneWire.h> //DS18B20
 #include <DallasTemperature.h> //DS18B20
+#include "DHT.h" //AM2302
 
 #define ONE_WIRE_BUS 4 //pin D2 on ESP8266 data line for DS18B20
+
+#define DHTPIN 0     //AM2302 connected to D3
+#define DHTTYPE DHT22   // DHT 22  (AM2302)
+
 
 #ifndef STASSID
 #define STASSID "HarryPotter"
@@ -50,6 +55,8 @@ ESP8266WebServer server(80);
 OneWire oneWire(ONE_WIRE_BUS); //DS18B20
 DallasTemperature sensors(&oneWire); //DS18B20
 
+DHT dht(DHTPIN, DHTTYPE); //AM2302
+
 const int led = 13;
 
 void handleRoot() {
@@ -62,6 +69,8 @@ void handleRoot() {
   
   sensors.requestTemperatures(); //DS18B20
   float tempVal = sensors.getTempCByIndex(0); //DS18B20
+
+  float humVal = dht.readHumidity(); //AM2302
 
   snprintf(temp, 400,
 
@@ -77,10 +86,11 @@ void handleRoot() {
     <h1>ESP8266 Data Readings</h1>\
     <p>Uptime: %02d:%02d:%02d.%02d</p>\
     <p>Temperature: %10.2fC</p>\
+    <p>Humidity: %10.2f%%</p>\
   </body>\
 </html>",
 
-           hr, minute % 60, sec % 60, tmil%1000, tempVal
+           hr, minute % 60, sec % 60, tmil%1000, tempVal, humVal
           );
   server.send(200, "text/html", temp);
   digitalWrite(led, 0);
@@ -129,7 +139,10 @@ void setup(void) {
   Serial.begin(115200);
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
+  
   sensors.begin(); //DS18B20
+  dht.begin(); //AM2302
+  
   Serial.println("");
 
   // Wait for connection
