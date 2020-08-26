@@ -56,8 +56,8 @@
 
 
 #ifndef STASSID
-#define STASSID "HarryPotter" //REPLACE with network ID
-#define STAPSK  "ilikepie" //REPLACE with network password
+#define STASSID NETWORKID //REPLACE with network ID
+#define STAPSK  NETWORKPASSWORD //REPLACE with network password
 #endif
 
 const char *ssid = STASSID;
