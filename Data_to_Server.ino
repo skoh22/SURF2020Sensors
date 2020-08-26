@@ -43,8 +43,8 @@
 
 
 #ifndef STASSID
-#define STASSID "HarryPotter"
-#define STAPSK  "ilikepie"
+#define STASSID INSERTNETWORKIDHERE //change this to network id
+#define STAPSK  INSERTNETWORKPASSWORDHERE //change this to network password
 #endif
 
 const char *ssid = STASSID;
